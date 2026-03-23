@@ -1,21 +1,33 @@
 class Solution {
 public:
-    int minSubArrayLen(int target, vector<int>& nums) {
+      bool windowfind(int size, vector<int>&nums, int target) {
+        int sum = 0;
         int i=0;
         int j=0;
-        int sum=0;
-        int mn=INT_MAX;
-        while(j<nums.size()){
+        int mx=INT_MIN;
+        int n=nums.size();
+        while(j<n){
             sum+=nums[j];
-            while(sum>=target){
-                sum-=nums[i];
-                mn=min(j-i+1,mn);
-                i++;
+            if(j-i+1==size){
+              mx=max(sum,mx);
+              sum-=nums[i];
+              i++;
             }
             j++;
         }
-        if(mn==INT_MAX){
-            return 0;
+        if(mx>=target)
+        return true;
+        return false;
+    }
+
+    int minSubArrayLen(int target, vector<int>& nums) {
+        int low = 1, high = nums.size(), mn = 0;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (windowfind(mid, nums, target)) {
+                high = mid-1;
+                mn = mid;
+            } else low = mid + 1;
         }
         return mn;
     }
